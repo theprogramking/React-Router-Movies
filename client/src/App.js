@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Router, Route, Link } from "react-router-dom";
-import { useRouteMatch } from "react-router";
+import { Route, Link, Switch } from "react-router-dom";
 
 import SavedList from './Movies/SavedList';
 import MovieList from './Movies/MovieList';
@@ -10,12 +9,11 @@ import Movie from './Movies/Movie';
 const App = () => {
   const [savedList, setSavedList] = useState([]);
   const [movieList, setMovieList] = useState([]);
-  const { id, url } = useRouteMatch();
 
   useEffect(() => {
     const getMovies = () => {
       axios
-        .get('http://localhost:5000/api/movies/:movieId')
+        .get('http://localhost:5000/api/movies')
         .then(response => {
           setMovieList(response.data);
         })
@@ -33,11 +31,11 @@ const App = () => {
   return (
     <div>
       <SavedList list={savedList} />
-      <Route path="/">
+      <Route exact path="/">
         <MovieList movies={movieList} />
       </Route>
-      <Route path="/movies/:movieId">
-        <Movie />
+      <Route path='/movies/:id'>
+          <Movie addToSavedList={addToSavedList} />
       </Route>
     </div>
   );
